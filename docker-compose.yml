@@ -1,0 +1,40 @@
+version: '3.7'
+
+services:
+  consul-server-1:
+    image: hashicorp/consul:1.11.2
+    container_name:  consul-server-1
+    hostname: consul-server-1
+    command: "agent -bootstrap-expect=3"
+    volumes:
+      - ./servers/server1.json:/consul/config/server1.json
+    ports:
+      - "8500:8500"
+       
+  consul-server-2:
+    image: hashicorp/consul:1.11.2
+    container_name:  consul-server-2
+    hostname: consul-server-2
+    command: "agent -bootstrap-expect=3"
+    volumes:
+      - ./servers/server2.json:/consul/config/server2.json
+  consul-server-3:
+    image: hashicorp/consul:1.11.2
+    container_name:  consul-server-3
+    hostname: consul-server-3
+    command: "agent -bootstrap-expect=3"
+    volumes:
+      - ./servers/server3.json:/consul/config/server3.json    
+  consul-client-1:
+    build:
+      context: ./clients
+      dockerfile: Dockerfile
+    image: rdias/fullcycle/consul/consul-client-nginx
+    container_name: consul-client-1
+    hostname: consul-client-1
+    #command: "agent"
+    volumes:
+      - ./clients/client1.json:/consul/config/client.json
+    ports:
+      - "80:80"
+
